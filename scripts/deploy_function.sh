@@ -15,7 +15,8 @@ gcloud --project=${PROJECT_ID} functions deploy ${function_name} \
 --trigger-http --entry-point process --region ${REGION}  \
 --service-account ${IAM_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com \
 --set-env-vars TOPIC_PROJECT_ID=${PROJECT_ID} \
---memory 128MB --timeout 60s --max-instances 5 \
+--set-env-vars BUCKET_NAME=${BUCKET_NAME} \
+--memory 256MB --timeout 60s --max-instances 5 \
 --runtime python38 --source "src/cloud_functions/places_transformer" --quiet
 
 gcloud --project=${PROJECT_ID} functions add-iam-policy-binding ${function_name} \
