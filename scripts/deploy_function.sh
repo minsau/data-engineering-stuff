@@ -16,6 +16,9 @@ gcloud --project=${PROJECT_ID} functions deploy ${function_name} \
 --service-account ${IAM_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com \
 --set-env-vars TOPIC_PROJECT_ID=${PROJECT_ID} \
 --set-env-vars BUCKET_NAME=${BUCKET_NAME} \
+--set-env-vars BQ_DATASET_PREFIX=${BQ_DATASET_PREFIX} \
+--set-env-vars GOOGLE_CREDENTIALS_PATH=${GOOGLE_CREDENTIALS_PATH} \
+--set-secrets GCP_SECRET_NAME=${GCP_SECRET_NAME}:latest \
 --memory 256MB --timeout 60s --max-instances 5 \
 --runtime python38 --source "src/cloud_functions/places_transformer" --quiet
 

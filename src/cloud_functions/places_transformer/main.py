@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 from google.cloud import storage
+from .config import secrets
 
 ########## global vars ##########
 
@@ -29,6 +30,7 @@ def process(request: object) -> tuple:
     try:
         headers = get_data_file()
         print(headers)
+        print(secrets.HOME_LOCATION)
         return ("OK", 200)
     except Exception as e:
         return (str(e), 500)

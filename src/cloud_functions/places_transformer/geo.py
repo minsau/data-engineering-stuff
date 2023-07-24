@@ -1,5 +1,5 @@
 from math import sin, cos, sqrt, atan2, radians
-from src.config import settings
+from cloud_functions.places_transformer.config import secrets
 
 # Approximate radius of earth in km
 R = 6373.0
@@ -20,6 +20,6 @@ def get_distance_in_km_between_two_points(origin: tuple, destiny: tuple) -> floa
 
 
 def get_distance_from_home_in_km(destiny: tuple) -> float:
-    home_location_str = settings.HOME_LOCATION
+    home_location_str = secrets.HOME_LOCATION
     home = tuple(map(float, home_location_str.split(',')))
     return get_distance_in_km_between_two_points(home, destiny)
