@@ -1,8 +1,11 @@
 ########## global imports ##########
 import os
+from google.cloud import bigquery
 import pandas as pd
 from google.cloud import storage
-from .config import get_app_secrets
+from .config import get_app_secrets, settings
+from .geo import get_geocode_by_place_name
+
 
 secrets = get_app_secrets()
 
@@ -17,22 +20,35 @@ def get_data_file() -> str:
     blob.download_to_filename('/tmp/temp.csv')        
     with open('/tmp/temp.csv','rb') as f:
         df = pd.read_csv(f)
-    
-    return str(df.columns)
+    print(f'File downloaded from bucket {bucket_name}')
+    return df
 
-# def parse_http_request(request: object) -> dict:
-#     try:
-#         request_args = request.args
-#         request_dict = request_args if type(request_args) is dict else dict(request_args)
-#         return request_dict
-#     except:
-#         return dict()
+def generate_transformed_data_frame(df: pd.DataFrame) -> list:
+    final_list = [get_geocode_by_place_name(place, visited) for place, visited in zip(df['places'], df['visited'])]
+    places_df = pd.DataFrame(final_list)
+    places_df.drop_duplicates(inplace=True)
+    places_df['place_name_list'].to_string(index=False)
+    places_df['formatted_address'].to_string(index=False)
+    places_df['place_id'].to_string(index=False)
+    print(f'File transformed')
+    return places_df
+
+def update_bigquery_table(places_df: pd.DataFrame) -> None:
+    table_id = f'{settings.BQ_DATASET_PREFIX}.places'
+    bq_client = bigquery.Client()
+    bq_client.delete_table(table_id, not_found_ok=True)
+    job = bq_client.load_table_from_dataframe(
+        places_df, 
+        table_id
+    )
+    job.result()
+    print(f'Data uploaded to BigQuery')
 
 def process(request: object) -> tuple:
     try:
-        headers = get_data_file()
-        print(headers)
-        print(secrets.HOME_LOCATION)
+        df = get_data_file()
+        places_df = generate_transformed_data_frame(df)
+        update_bigquery_table(places_df)
         return ("OK", 200)
     except Exception as e:
         return (str(e), 500)
