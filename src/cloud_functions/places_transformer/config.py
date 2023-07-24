@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 from pydantic_settings import BaseSettings
 from pydantic import BaseModel
 from google.cloud import secretmanager
@@ -7,7 +7,7 @@ import json
 class Settings(BaseSettings):
     BQ_DATASET_PREFIX: str
     GOOGLE_CREDENTIALS_PATH: str
-    GCP_SECRET_VALUE: Optional[str] = None
+    GCP_SECRET_VALUE: Optional[Union[str, dict]] = None
     GCP_SECRET_NAME: str
     BUCKET_NAME: str
     PROJECT_ID: str
@@ -27,6 +27,6 @@ def get_app_secrets() -> Secrets:
         response = client.access_secret_version(request={"name": name})
         data_str = response.payload.data.decode("UTF-8")
     else:
-        data_str = settings.GCP_SECRET_NAME
+        data_str = settings.GCP_SECRET_VALUE
     
-    return Secrets(**json.loads(data_str))
+    return Secrets(**data_str)

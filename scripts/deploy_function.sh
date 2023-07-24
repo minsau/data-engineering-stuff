@@ -12,12 +12,14 @@ sleep 5
 
 green "Create the function (${function_name}) & give the IAM user invoke access"
 gcloud --project=${PROJECT_ID} functions deploy ${function_name} \
---trigger-http --entry-point process --region ${REGION}  \
+--trigger-resource ${BUCKET_NAME} \
+--trigger-event "google.storage.object.finalize" \
 --service-account ${IAM_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com \
 --set-env-vars PROJECT_ID=${PROJECT_ID} \
 --set-env-vars BUCKET_NAME=${BUCKET_NAME} \
 --set-env-vars BQ_DATASET_PREFIX=${BQ_DATASET_PREFIX} \
 --set-env-vars GOOGLE_CREDENTIALS_PATH=${GOOGLE_CREDENTIALS_PATH} \
+--set-env-vars GCP_SECRET_NAME=${GCP_SECRET_NAME} \
 --set-secrets GCP_SECRET_VALUE=${GCP_SECRET_NAME}:latest \
 --memory 256MB --timeout 60s --max-instances 5 \
 --runtime python38 --source "src/cloud_functions/places_transformer" --quiet

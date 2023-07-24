@@ -5,6 +5,8 @@ import pandas as pd
 from google.cloud import storage
 from .config import get_app_secrets, settings
 from .geo import get_geocode_by_place_name
+import functions_framework
+from cloudevents.http import CloudEvent
 
 
 secrets = get_app_secrets()
@@ -44,7 +46,20 @@ def update_bigquery_table(places_df: pd.DataFrame) -> None:
     job.result()
     print(f'Data uploaded to BigQuery')
 
-def process(request: object) -> tuple:
+@functions_framework.cloud_event
+def places_transformer(cloud_event: CloudEvent) -> tuple:
+    data = cloud_event.data
+
+    event_id = cloud_event["id"]
+    event_type = cloud_event["type"]
+    bucket = data["bucket"]
+    name = data["name"]
+
+    print(f"Event ID: {event_id}")
+    print(f"Event type: {event_type}")
+    print(f"Bucket: {bucket}")
+    print(f"File: {name}")
+
     try:
         df = get_data_file()
         places_df = generate_transformed_data_frame(df)
