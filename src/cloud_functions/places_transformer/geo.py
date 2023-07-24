@@ -1,5 +1,7 @@
 from math import sin, cos, sqrt, atan2, radians
-from cloud_functions.places_transformer.config import secrets
+from cloud_functions.places_transformer.config import get_app_secrets
+
+secrets = get_app_secrets()
 
 # Approximate radius of earth in km
 R = 6373.0

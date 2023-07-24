@@ -2,7 +2,9 @@
 import os
 import pandas as pd
 from google.cloud import storage
-from .config import secrets
+from .config import get_app_secrets
+
+secrets = get_app_secrets()
 
 ########## global vars ##########
 
