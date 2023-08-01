@@ -8,7 +8,7 @@ Cenote Zazil tunich,False
 Hameki homun,False
 Las coloradas,False
 Izamal,False
-Ik kil,False
+Ik kil,True
 "El cuyo, Yucatán",False
 Holbox,False
 Ciudad del Carmen,False
@@ -111,8 +111,7 @@ Kamicochi nagano,False
 OGARRIO,False
 CREEL,False
 REAL DE CATORCE,False
-PEÑa DE BERNAL,False
-VALLADOLID,False
+VALLADOLID,True
 EL FUERTE,False
 PATZCUARO,False
 TEPOZTLAN,False
@@ -120,6 +119,7 @@ CHIAPA DE CORZO,False
 "Boca de Tomatlán, Jalisco",False
 Nevado de Toluca,True
 Bacalar,True
+"Isla mujeres",True
 Teotihuacan,True
 Peña de Bernal,True
 "Playa balandra, baja California sur",True
